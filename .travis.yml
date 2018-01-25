@@ -29,6 +29,9 @@ notifications:
 
 before_script:
   - npm install 
+  - travis_wait 1 y
+  - travis_wait 1 y
+  - travis_wait 1 y
 
 install: 
  - npm install  grunt-cli istanbul -g

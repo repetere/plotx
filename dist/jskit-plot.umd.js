@@ -2374,12 +2374,25 @@ var asyncToGenerator = function (fn) {
   };
 };
 
+/**
+ * returns extension from filepath
+ * @param {String} filename - file path 
+ * @return {String} file extension
+ */
 function getFileExtension() {
   var filename = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
   return extname(filename).replace('.', '') || 'svg';
 }
 
+/**
+ * creates chart image
+ * @param {Object} options 
+ * @param {Object} [options.filename ='jsk-plot'] - full file path of output image
+ * @param {Object} options.chart - options passed to highcharts-export-server CLI 
+ * @see {@link https://github.com/highcharts/node-export-server#using-as-a-nodejs-module} 
+ * @return {Object} either returns {filename} or {data} if the outfile file is a SVG or PDF will return filename
+ */
 var plot = function () {
   var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { filename: 'jsk-plot' };
@@ -2400,7 +2413,6 @@ var plot = function () {
                   options: options.chart
                 };
 
-                // console.log({exportSettings})
                 //Set up a pool of PhantomJS workers
                 undefined();
 

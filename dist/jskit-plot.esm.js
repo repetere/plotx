@@ -5,10 +5,23 @@ import { export, initPool, killPool } from 'highcharts-export-server';
 
 function __async(g){return new Promise(function(s,j){function c(a,x){try{var r=g[x?"throw":"next"](a);}catch(e){j(e);return}r.done?s(r.value):Promise.resolve(r.value).then(c,d);}function d(e){c(e,1);}c();})}
 
+/**
+ * returns extension from filepath
+ * @param {String} filename - file path 
+ * @return {String} file extension
+ */
 function getFileExtension(filename='') {
   return extname(filename).replace('.','') || 'svg';
 }
 
+/**
+ * creates chart image
+ * @param {Object} options 
+ * @param {Object} [options.filename ='jsk-plot'] - full file path of output image
+ * @param {Object} options.chart - options passed to highcharts-export-server CLI 
+ * @see {@link https://github.com/highcharts/node-export-server#using-as-a-nodejs-module} 
+ * @return {Object} either returns {filename} or {data} if the outfile file is a SVG or PDF will return filename
+ */
 function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
   return new Promise((resolve$$1, reject) => {
     try {
@@ -23,7 +36,6 @@ function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
         options: options.chart,
       };
 
-      // console.log({exportSettings})
       //Set up a pool of PhantomJS workers
       initPool();
 
