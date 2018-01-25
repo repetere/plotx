@@ -68,6 +68,22 @@ $ grunt test
 ### Contributing
 Fork, write tests and create a pull request!
 
+
+### Development
+
+Note *Make sure you have grunt installed*
+
+```sh
+$ npm i -g grunt-cli jsdoc-to-markdown
+```
+
+For generating documentation
+
+```sh
+$ grunt doc
+$ jsdoc2md src/**/*.js  > docs/api.md
+```
+
 License
 ----
 
