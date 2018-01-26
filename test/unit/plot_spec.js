@@ -25,6 +25,8 @@ const chart = {
 };
 const testFilePath = './test/mock/plot.svg';
 const resolvedTestFilePath = path.resolve(testFilePath);
+const testFilePath2 = './test/mock/plot2.svg';
+const resolvedTestFilePath2 = path.resolve(testFilePath);
 const testFilePNGPath = './test/mock/plot.png';
 const resolvedTestFilePNGPath = path.resolve(testFilePNGPath);
 describe('jskit-plot', function () { 
@@ -58,6 +60,20 @@ describe('jskit-plot', function () {
         })
         .catch(done);
     });
+    it('should work with outfile', function(done){
+      jskp.plot({
+        outfile: testFilePath2,
+        chart,
+      })
+        .then(val => {
+          // console.log({ val,resolvedTestFilePath});
+          expect(val).to.haveOwnProperty('filename');
+          expect(jskp.getFileExtension(val.filename)).to.eql('svg');
+          expect(fs.pathExistsSync(resolvedTestFilePath2)).to.be.true;
+          done();
+        })
+        .catch(done);
+    });
     it('should output a default svg', function (done) {
       jskp.plot({
         chart,
@@ -72,7 +88,7 @@ describe('jskit-plot', function () {
     it('should error with no chart', function (done) {
       jskp.plot({
       })
-        .then((errorChart) => {
+        .then(() => {
           done(new Error('should have thrown error without data'));
         })
         .catch(e => {
@@ -96,6 +112,7 @@ describe('jskit-plot', function () {
       Promise.all([
         fs.remove(path.resolve('./jsk-plot.svg')),
         fs.remove(resolvedTestFilePath),
+        fs.remove(resolvedTestFilePath2),
         fs.remove(resolvedTestFilePNGPath),
       ])
         .then(results => {
