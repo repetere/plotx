@@ -1,7 +1,7 @@
 {
   "name": "jskit-plot",
   "description": "jskit-plot is a javascript module for quickly plotting data with highcharts. When jskit-plot used with ML.js, and jskit-learn, you're left with the equialent R/Python toolset in JavaScript.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "dist/jskit-plot.cjs.js",
   "module": "dist/jskit-plot.esm.js",
   "browser": "dist/jskit-plot.umd.js",

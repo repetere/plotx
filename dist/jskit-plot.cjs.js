@@ -18,18 +18,48 @@ function getFileExtension(filename='') {
   return path.extname(filename).replace('.','') || 'svg';
 }
 
+function getTableData(chart = {}) {
+  const points = (chart.xAxis && chart.xAxis.categories)
+    ? chart.xAxis.categories
+    : (chart.series && chart.series.length)
+      ? Object.keys(chart.series[ 0 ])
+      : [];  
+  const xlabel = (chart.xAxis && chart.xAxis.title && chart.xAxis.title.text)
+    ? chart.xAxis.title.text
+    : 'xAxis';
+  const seriesLabels = (Array.isArray(chart.series))
+    ? chart.series.map((chartObj,i) => {
+      return (chartObj.name) ? chartObj.name : `plot ${i}`;
+    })
+    : [];
+  
+  const chartTable= points.reduce((result, val, index) => { 
+    const tableRow = {
+      point:points[index],
+    };
+    seriesLabels.forEach((seriesLabel, si) => {
+      tableRow[ seriesLabel ] = chart.series[ si ].data[ index ];
+    });
+    result.push(tableRow);
+
+    return result;
+  }, []);
+
+  return chartTable;
+}
+
 /**
  * creates chart image
  * @param {Object} options 
  * @param {Object} [options.filename ='jsk-plot'] - full file path of output image
  * @param {Object} options.chart - options passed to highcharts-export-server CLI 
- * @see {@link https://github.com/highcharts/node-export-server#using-as-a-nodejs-module} 
+ * @see { @link https://github.com/highcharts/node-export-server#using-as-a-nodejs-module } 
  * @return {Object} either returns {filename} or {data} if the outfile file is a SVG or PDF will return filename
  */
-function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
+function plot(options = { }) {return __async(function*(){
   return new Promise((resolve$$1, reject) => {
     try {
-      const config = Object.assign({}, { filename: 'jsk-plot' }, options);
+      const config = Object.assign({}, { filename: 'jsk-plot', returnTable: true, }, options);
       const filename = (config.filename) ? config.filename : config.outfile;
       const fileext = getFileExtension(filename);
       const formattedFilename = path.resolve(path.dirname(filename), `${path.basename(filename, '.'+fileext)}.${fileext}`);
@@ -37,7 +67,7 @@ function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
       const exportSettings = {
         type: fileext,
         outfile: formattedFilename,
-        options: options.chart,
+        options: config.chart,
       };
 
       //Set up a pool of PhantomJS workers
@@ -52,6 +82,9 @@ function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
         .then(file => {
           // console.log({file})
           highcharts.killPool();
+          if (config.returnTable) {
+            file.table = getTableData(config.chart);
+          }
           if ([ 'svg', 'pdf' ].includes(fileext)) {
             return resolve$$1(file);
           } else {
@@ -59,7 +92,9 @@ function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
               formattedFilename,
               file.data,
              { encoding: 'base64' })
-             .then(resolve$$1)
+              .then(() => {
+                resolve$$1(file);
+              })
              .catch(reject);
           }
         // fs.outputFileSync('./test.png',res.data, {encoding:'base64'})
@@ -75,4 +110,5 @@ function plot(options = { filename:'jsk-plot'}) {return __async(function*(){
 }())}
 
 exports.getFileExtension = getFileExtension;
+exports.getTableData = getTableData;
 exports.plot = plot;

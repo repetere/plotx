@@ -52,7 +52,6 @@ describe('jskit-plot', function () {
         chart,
       })
         .then(val => {
-          // console.log({ val,resolvedTestFilePath});
           expect(val).to.haveOwnProperty('filename');
           expect(jskp.getFileExtension(val.filename)).to.eql('svg');
           expect(fs.pathExistsSync(resolvedTestFilePath)).to.be.true;
@@ -102,7 +101,7 @@ describe('jskit-plot', function () {
         chart,
       })
         .then(pngVal => {
-          expect(pngVal).to.be.undefined;
+          expect(pngVal).to.be.an('object');
           expect(fs.pathExistsSync(resolvedTestFilePNGPath)).to.be.true;
           done();
         })
