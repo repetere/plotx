@@ -2374,6 +2374,29 @@ var asyncToGenerator = function (fn) {
   };
 };
 
+
+
+
+
+
+
+
+
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
 /**
  * returns extension from filepath
  * @param {String} filename - file path 
@@ -2385,6 +2408,10 @@ function getFileExtension() {
   return extname(filename).replace('.', '') || 'svg';
 }
 
+/**
+ * returns an array of objects (a table of the chart data)
+ * @param {*} chart 
+ */
 function getTableData() {
   var chart = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -2395,9 +2422,7 @@ function getTableData() {
   }) : [];
 
   var chartTable = points.reduce(function (result, val, index) {
-    var tableRow = {
-      point: points[index]
-    };
+    var tableRow = defineProperty({}, xlabel, points[index]);
     seriesLabels.forEach(function (seriesLabel, si) {
       tableRow[seriesLabel] = chart.series[si].data[index];
     });

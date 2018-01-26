@@ -14,6 +14,10 @@ function getFileExtension(filename='') {
   return extname(filename).replace('.','') || 'svg';
 }
 
+/**
+ * returns an array of objects (a table of the chart data)
+ * @param {*} chart 
+ */
 function getTableData(chart = {}) {
   const points = (chart.xAxis && chart.xAxis.categories)
     ? chart.xAxis.categories
@@ -31,7 +35,7 @@ function getTableData(chart = {}) {
   
   const chartTable= points.reduce((result, val, index) => { 
     const tableRow = {
-      point:points[index],
+      [xlabel]:points[index],
     };
     seriesLabels.forEach((seriesLabel, si) => {
       tableRow[ seriesLabel ] = chart.series[ si ].data[ index ];

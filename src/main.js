@@ -33,7 +33,7 @@ export function getTableData(chart = {}) {
   
   const chartTable= points.reduce((result, val, index) => { 
     const tableRow = {
-      point:points[index],
+      [xlabel]:points[index],
     };
     seriesLabels.forEach((seriesLabel, si) => {
       tableRow[ seriesLabel ] = chart.series[ si ].data[ index ];
